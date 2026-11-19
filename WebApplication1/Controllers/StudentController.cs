@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Dtos;
 using WebApplication1.Models;
@@ -7,14 +8,14 @@ namespace WebApplication1.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StudentController(StudentStorage studentStorage) : Controller
+    public class StudentController(AppDbContext db) : Controller
     {
         //eh sad, obzirom da je ovo kontroler, i da je ovo ispod dole akcija, ono sto bi trebali imati ovdje ispod je [HttpGet], a iznad StudentController klase bi trebali navesti da je to Api Controller, i navodimo da je ruta Naziv kontrolera
 
         [HttpGet]
-        public List<StudentResponse> GetAll()
+        public async Task<List<StudentResponse>> GetAll(CancellationToken ct)
         {
-            List<Student> students = studentStorage.GetAll();
+            List<Student> students = await db.Studenti.ToListAsync(ct);
             return students.Select(Mapiraj).ToList();
             //To List pisemo jer Select funkcija nam vraca IEnumerable tip podatka (podaci nad kojima se ne mogu izvrsavati daljnje operacije, niti se mogu mijenjati, dok sa listama to mozemo).
             //Stoga je potrebno uraditi eksplicitnu konverziju u ToList()
