@@ -42,7 +42,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            return Ok(student);
+            return Ok(Mapiraj(student));
         }
     }
 }
