@@ -32,5 +32,17 @@ namespace WebApplication1.Controllers
                 DatumRodjenja = s.DatumRodjenja,
             };
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StudentResponse>> GetById(int id, CancellationToken ct)
+        {
+            Student? student = await db.Studenti.FirstOrDefaultAsync(c => c.Id == id, ct);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return Ok(student);
+        }
     }
 }
